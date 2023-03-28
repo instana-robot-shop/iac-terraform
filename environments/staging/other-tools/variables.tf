@@ -12,6 +12,15 @@ variable "region" {
 }
 
 /**
+  * eks 
+*/
+variable "cluster_name" {
+  type = string
+  description = "eks cluster name"
+  default = "my-eks"
+}
+
+/**
   * others 
 */
 variable "environment" {

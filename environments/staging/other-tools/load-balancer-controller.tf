@@ -1,3 +1,6 @@
+# /**
+#   * iam
+# */
 module "aws_load_balancer_controller_irsa_role" {
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "5.3.1"
@@ -14,12 +17,15 @@ module "aws_load_balancer_controller_irsa_role" {
   }
 }
 
+# /**
+#   * install load balancer controller to eks with helm charts
+# */
 resource "helm_release" "aws_load_balancer_controller" {
   name = "aws-load-balancer-controller"
 
   repository = "https://aws.github.io/eks-charts"
   chart      = "aws-load-balancer-controller"
-  namespace  = "kube-system"
+  namespace  = "kube-system" # recommended namespace location for add-ons
   version    = "1.4.4"
 
   set {
