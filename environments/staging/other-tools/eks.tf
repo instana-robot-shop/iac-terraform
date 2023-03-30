@@ -1,8 +1,20 @@
+/**
+  * required for karpenter
+*/
+data "aws_partition" "current" {}
+
+locals {
+  partition = data.aws_partition.current.partition
+}
+
+/**
+  * create eks cluster
+*/
 module "eks" {
   source  = "terraform-aws-modules/eks/aws"
   version = "18.29.0"
 
-  cluster_name    = "my-eks"
+  cluster_name    = var.cluster_name
   cluster_version = "1.23"
 
   # cluster endpoint private: to access the cluster from a bastion host or vpn
@@ -14,7 +26,7 @@ module "eks" {
   vpc_id     = module.vpc.vpc_id
   subnet_ids = module.vpc.private_subnets
 
-  #
+  # required for add-ons (e.g. karpenter, load balancer controller) role
   enable_irsa = true
 
   # choose one (managed node group, self managed node group, or fargate profile)
@@ -34,6 +46,11 @@ module "eks" {
 
       instance_types = ["t3.small"]
       capacity_type  = "ON_DEMAND"
+
+      iam_role_additional_policies = [
+        # Required by Karpenter
+        "arn:${local.partition}:iam::aws:policy/AmazonSSMManagedInstanceCore"
+      ]
     }
 
     spot = {
@@ -67,8 +84,22 @@ module "eks" {
     },
   ]
 
-  # eks nodes security group (firewall) - to authenticate which can access the nodes
+  # cluster security group (firewall)
+  cluster_security_group_additional_rules = {
+    # used in karpenter provisioner
+    ingress_nodes_karpenter_ports_tcp = {
+      description                = "Karpenter readiness"
+      protocol                   = "tcp"
+      from_port                  = 8443
+      to_port                    = 8443
+      type                       = "ingress"
+      source_node_security_group = true
+    }
+  }
+
+  # node security group (firewall)
   node_security_group_additional_rules = {
+    # used in elb controller
     ingress_allow_access_from_control_plane = {
       type                          = "ingress"
       protocol                      = "tcp"
@@ -77,10 +108,21 @@ module "eks" {
       source_cluster_security_group = true
       description                   = "Allow access from control plane to webhook port of AWS load balancer controller"
     }
+
+    # used in karpenter provisioner
+    ingress_allow_karpenter_webhook_access_from_control_plane = {
+      description                   = "Allow access from control plane to webhook port of karpenter"
+      protocol                      = "tcp"
+      from_port                     = 8443
+      to_port                       = 8443
+      type                          = "ingress"
+      source_cluster_security_group = true
+    }
   }
 
   tags = {
     Environment = var.environment
+    "karpenter.sh/discovery" = var.cluster_name
   }
 }
 

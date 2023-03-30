@@ -17,7 +17,13 @@ module "vpc" {
     "kubernetes.io/role/elb" = "1"
   }
   private_subnet_tags = {
+    # Tags subnets for ELB
     "kubernetes.io/role/internal-elb" = "1"
+
+    "kubernetes.io/cluster/${var.cluster_name}" = "owned"
+
+    # Tags subnets for Karpenter auto-discovery
+    "karpenter.sh/discovery" = var.cluster_name
   }
 
   # one nat gateway per subnet but not per az
