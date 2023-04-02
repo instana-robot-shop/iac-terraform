@@ -36,7 +36,7 @@ module "vpc" {
   enable_dns_support   = true
 
   tags = {
-    Environment = "staging"
+    Environment = var.environment
   }
 }
 

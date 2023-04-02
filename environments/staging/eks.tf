@@ -31,12 +31,14 @@ module "eks" {
 
   # choose one (managed node group, self managed node group, or fargate profile)
   # configuration below creates two managed node groups (general and spot)
+  # to understand more: https://www.youtube.com/watch?v=xL-uAPn9znw
   eks_managed_node_group_defaults = {
     disk_size = 50
   }
   eks_managed_node_groups = {
+    # master
     general = {
-      desired_size = 1
+      desired_size = 2
       min_size     = 1
       max_size     = 10
 
@@ -44,8 +46,8 @@ module "eks" {
         role = "general"
       }
 
-      instance_types = ["t3.small"]
-      capacity_type  = "ON_DEMAND"
+      instance_types = ["t3.medium"]
+      capacity_type  = "ON_DEMAND" # not cheap, no interruptions
 
       iam_role_additional_policies = [
         # Required by Karpenter
@@ -53,6 +55,7 @@ module "eks" {
       ]
     }
 
+    # slave
     spot = {
       desired_size = 1
       min_size     = 1
@@ -69,7 +72,7 @@ module "eks" {
       }]
 
       instance_types = ["t3.micro"]
-      capacity_type  = "SPOT"
+      capacity_type  = "SPOT" # cheap, risk of interruptions
     }
   }
 
