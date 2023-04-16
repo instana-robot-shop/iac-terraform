@@ -18,8 +18,8 @@ module "ecr" {
         rulePriority = 1,
         description  = "Keep last 30 images",
         selection = {
-          tagStatus     = "tagged",
-          tagPrefixList = ["v"],
+          # tagStatus     = "tagged",
+          # tagPrefixList = ["v"],
           countType     = "imageCountMoreThan",
           countNumber   = 30
         },
@@ -35,3 +35,9 @@ module "ecr" {
     Environment = var.environment
   }
 }
+
+
+
+
+
+

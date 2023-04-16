@@ -2,7 +2,6 @@
 #   * iam
 # */
 module "aws_load_balancer_controller_irsa_role" {
-  count = var.environment != "dev" ? 1 : 0
   source  = "terraform-aws-modules/iam/aws//modules/iam-role-for-service-accounts-eks"
   version = "5.3.1"
 
@@ -22,7 +21,6 @@ module "aws_load_balancer_controller_irsa_role" {
 #   * install load balancer controller to eks with helm charts
 # */
 resource "helm_release" "aws_load_balancer_controller" {
-  count = var.environment != "dev" ? 1 : 0
   name = "aws-load-balancer-controller"
 
   repository = "https://aws.github.io/eks-charts"

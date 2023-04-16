@@ -1,12 +1,4 @@
 /**
-  * aws
-  * used to create aws resources
-*/
-provider "aws" {
-  region = var.region[0]
-}
-
-/**
   * k8s
   * used to connect to k8s cluster
 */

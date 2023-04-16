@@ -1,4 +1,6 @@
 module "allow_eks_access_iam_policy" {
+  count = var.environment != "dev" ? 1 : 0
+
   source  = "terraform-aws-modules/iam/aws//modules/iam-policy"
   version = "5.3.1"
 
@@ -20,6 +22,8 @@ module "allow_eks_access_iam_policy" {
 }
 
 module "eks_admins_iam_role" {
+  count = var.environment != "dev" ? 1 : 0
+
   source  = "terraform-aws-modules/iam/aws//modules/iam-assumable-role"
   version = "5.3.1"
 
@@ -35,6 +39,8 @@ module "eks_admins_iam_role" {
 }
 
 module "user1_iam_user" {
+  count = var.environment != "dev" ? 1 : 0
+
   source  = "terraform-aws-modules/iam/aws//modules/iam-user"
   version = "5.3.1"
 
@@ -46,6 +52,8 @@ module "user1_iam_user" {
 }
 
 module "allow_assume_eks_admins_iam_policy" {
+  count = var.environment != "dev" ? 1 : 0
+
   source  = "terraform-aws-modules/iam/aws//modules/iam-policy"
   version = "5.3.1"
 
@@ -67,6 +75,8 @@ module "allow_assume_eks_admins_iam_policy" {
 }
 
 module "eks_admins_iam_group" {
+  count = var.environment != "dev" ? 1 : 0
+
   source  = "terraform-aws-modules/iam/aws//modules/iam-group-with-policies"
   version = "5.3.1"
 

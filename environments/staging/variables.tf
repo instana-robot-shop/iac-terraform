@@ -46,5 +46,5 @@ variable "environment" {
 variable "microservice_apps" {
   type = list(string)
   description = "List down the names of the microservice apps to be deployed"
-  default = ["cloud-config-server", "cloud-gateway", "department-service", "hystric-dashboard", "service-registry", "user-service"]
+  default = ["cartservice", "catalogueservice", "dispatchservice", "mongodb", "mysql", "paymentservice", "ratingsservice", "shippingservice", "userservice", "web"]
 }

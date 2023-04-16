@@ -1,5 +1,6 @@
 module "vpc" {
   count = var.environment != "dev" ? 1 : 0
+
   source  = "terraform-aws-modules/vpc/aws"
   version = "3.14.3"
 
