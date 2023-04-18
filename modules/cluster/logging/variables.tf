@@ -22,10 +22,19 @@ variable "namespace" {
 */
 
 /**
+  * APM Server
+*/
+variable "apm-server-version" {
+    default = "8.5.1"
+    description = "apm server version"
+    type  = string
+}
+
+/**
   * ElasticSearch
 */
 variable "elasticsearch-version" {
-    default = "7.13.0"
+    default = "8.5.1"
     description = "elasticsearch version"
     type  = string
 }
@@ -64,7 +73,7 @@ variable "elasticsearch-persistence-size" {
   * Filebeat
 */
 variable "filebeat-version" {
-    default = "7.13.0"
+    default = "8.5.1"
     description = "filebeat version"
     type  = string
 }
@@ -89,7 +98,7 @@ variable "filebeat-purger-schedule" {
   * Kibana
 */
 variable "kibana-version" {
-    default = "7.13.0"
+    default = "8.5.1"
     description = "kibana version"
     type  = string
 }
@@ -106,5 +115,30 @@ variable "kibana-ingress-enabled" {
 variable "kibana-ingress-host" {
     default = "kibana.example.com"
     description = "elasticsearch ingress host"
+    type    = string
+}
+
+/**
+  * Metricbeat
+*/
+variable "metricbeat-version" {
+    default = "8.5.1"
+    description = "metricbeat version"
+    type  = string
+}
+variable "kubestate-enabled" {
+    default = true
+    description = "enable kube-state-metrics deployment for metricbeat"
+    type    = bool
+}
+variable "metricbeat-daemonset-enabled" {
+    default = true
+    description = "metricbeat daemonset"
+    type    = bool
+}
+variable "metricbeat-purger-schedule" {
+    // every 24H
+    default = "0 0 * * *"
+    description = "CronJob which cleaning up metricbeat data from elasticsearch (default:every 24H)"
     type    = string
 }

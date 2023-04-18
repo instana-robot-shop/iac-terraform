@@ -4,13 +4,9 @@ resource "helm_release" "apm-server" {
   repository = "https://helm.elastic.co"
   chart = "apm-server"
   namespace = var.namespace
-  atomic = true
-  cleanup_on_fail = true
+
+  # default config values for the chart - these values are found from the artifacthub page of the chart
   values = [
     file("${path.module}/configs/apm-server-values.yaml")
   ]
-  set {
-    name  = "imageTag"
-    value = var.apm-server-version
-  }
 }

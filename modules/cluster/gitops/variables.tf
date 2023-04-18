@@ -24,4 +24,9 @@ variable "namespace" {
 /**
   * ArgoCD
 */
+variable "argocd_admin_password" {
+  default = "admin"
+  description = "default grafana admin password"
+  type    = string
+}
 
